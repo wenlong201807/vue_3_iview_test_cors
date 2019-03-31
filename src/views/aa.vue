@@ -63,7 +63,7 @@
       </Form>
       <br> <br>
     </Modal>
-    <!-- <Modal v-model="modelAmendRow" title="修改一行模态框" width='400' @on-ok="okAmendRow" @on-cancel="cancelAmendRow">
+    <Modal v-model="modelAmendRow" title="修改一行模态框" width='400' @on-ok="okAmendRow" @on-cancel="cancelAmendRow">
       <Form ref="formDynamicAmendRow" :model="formDynamicAmendRow">
         <FormItem v-for="(item, index) in formDynamicAmendRow.lists" :key="index" :prop="'lists.' + index + '.addValue'"
           :rules="{required: true, message: item.amendTitle  +' 不能为空', trigger: 'blur'}">
@@ -72,7 +72,7 @@
           </Input>
         </FormItem>
       </Form>
-    </Modal> -->
+    </Modal>
   </div>
 </template>
 
@@ -80,6 +80,9 @@
 export default {
   data() {
     return {
+      formDynamicAmendRow: {
+        lists: []
+      },
       formDynamicAddRow: {
         lists: [
           // {
@@ -132,6 +135,7 @@ export default {
           }
         ]
       },
+      currentAmendId: 1,
       modelAddColum: false,
       modelAddRow: false,
       modelAmendRow: false,
@@ -175,9 +179,62 @@ export default {
                   },
                   on: {
                     click: () => {
+                      // {
+                      //   addValue: "",
+                      //   addTitle: "姓名",
+                      //   index: 1
+                      // },
+                      this.modelAmendRow = true;
+                      this.formDynamicAmendRow.lists = [];
                       console.log("表格原有内容", params.row);
                       console.log("动态表头", this.initHeadData);
-                      this.show(params.index);
+
+                      // for (let [key, value] of Object.entries(params.row)) {
+                      //   console.log(key, value);
+                      //   this.initHeadData.map((item, index) => {
+                      //     console.log(item, index);
+                      //     let objAmend = {};
+                      //     if (key == item.key) {
+                      //       objAmend["amendTitle"] = item.title;
+                      //       objAmend["index"] = item.id;
+                      //       objAmend["amendValue"] = value;
+                      //       this.formDynamicAmendRow.lists.push(objAmend);
+                      //     }
+                      //   });
+                      // }
+
+                      console.log("原有表格数据", params.row);
+                      this.currentAmendId = params.row.id;
+                      this.initHeadData.map((item, index) => {
+                        console.log(index);
+                        for (let [key, value] of Object.entries(params.row)) {
+                          let objAmend = {};
+                          if (key == item.key) {
+                            objAmend["amendTitle"] = item.title;
+                            objAmend["index"] = item.id;
+                            objAmend["amendValue"] = value;
+                            objAmend["key"] = item.key;
+                            this.formDynamicAmendRow.lists.push(objAmend);
+                          }
+                        }
+
+                        // if (index > Object.entries(params.row).length) {
+                        //   let objAmend = {};
+                        //   objAmend["amendTitle"] = item.title;
+                        //   objAmend["index"] = item.id;
+                        //   objAmend["amendValue"] = "";
+                        //   this.formDynamicAmendRow.lists.push(objAmend);
+                        // }
+                      });
+
+                      for (let [key, value] of Object.entries(params.row)) {
+                        console.log(key, value);
+                      }
+
+                      console.log(
+                        "修改表单中的数据",
+                        this.formDynamicAmendRow.lists
+                      );
                     }
                   }
                 },
@@ -197,6 +254,40 @@ export default {
   },
   watch: {},
   methods: {
+    cancelAmendRow() {
+      console.log("cancelAmendRow");
+    },
+    okAmendRow() {
+      console.log("okAmendRow", this.currentAmendId);
+      console.log(this.formDynamicAmendRow.lists);
+
+      let newParams = {};
+      let len = this.formDynamicAmendRow.lists.length;
+      for (let i = 0; i < len; i++) {
+        console.log(
+          i,
+          this.formDynamicAmendRow.lists[i].key,
+          this.formDynamicAmendRow.lists[i].amendValue
+        );
+        newParams[
+          this.formDynamicAmendRow.lists[i].key
+        ] = this.formDynamicAmendRow.lists[i].amendValue;
+      }
+      console.log(newParams);
+
+      // let params = {
+      //   id: this.currentAmendId,
+      //   ...newParams
+      // };
+      this.$axios
+        .put("http://localhost:3456/content/" + this.currentAmendId, newParams)
+        .then(res => {
+          console.log(res);
+          // this.initData = res.data;
+          this.initContent();
+          this.$Message.info("数据修改成功");
+        });
+    },
     initHead() {
       console.log("我是头部信息");
       this.initColum = [];
@@ -313,9 +404,6 @@ export default {
     },
     cancelDelColum() {
       console.log("删除一列列列取消按钮");
-    },
-    show(index) {
-      console.log(index, "修改");
     },
     removeRow(index) {
       console.log(index, "删除");
