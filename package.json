@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "babel-loader": "^8.0.5",
+    "babel-loader": "^8.3.0",
     "iview": "^3.0.1",
     "register-service-worker": "^1.0.0",
     "vue": "^2.5.17",
@@ -20,17 +20,17 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.4",
-    "@vue/cli-plugin-e2e-cypress": "^3.0.3",
-    "@vue/cli-plugin-eslint": "^3.0.3",
+    "@vue/cli-plugin-babel": "^3.12.1",
+    "@vue/cli-plugin-e2e-cypress": "^3.12.1",
+    "@vue/cli-plugin-eslint": "^5.0.8",
     "@vue/cli-plugin-pwa": "^3.0.3",
-    "@vue/cli-plugin-unit-mocha": "^3.0.3",
-    "@vue/cli-service": "^3.0.3",
+    "@vue/cli-plugin-unit-mocha": "^5.0.8",
+    "@vue/cli-service": "^5.0.8",
     "@vue/eslint-config-prettier": "^3.0.4",
     "@vue/test-utils": "^1.0.0-beta.20",
     "chai": "^4.1.2",
     "less": "^3.0.4",
-    "less-loader": "^4.1.0",
+    "less-loader": "^11.1.0",
     "lint-staged": "^7.2.2",
     "vue-cli-plugin-iview": "^1.0.6",
     "vue-template-compiler": "^2.5.17"
